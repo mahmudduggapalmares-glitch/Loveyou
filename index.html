@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entorno de Programación & Música</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #0b0c10;
+            color: #66fcf1;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Pantalla de inicio para desbloquear el audio en el navegador */
+        #pantalla-inicio {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #0b0c10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            cursor: pointer;
+            transition: opacity 0.6s ease;
+        }
+
+        #pantalla-inicio h2 {
+            font-size: 1.8rem;
+            color: #45a29e;
+            text-align: center;
+            padding: 0 20px;
+            animation: parpadeo 1.5s infinite;
+        }
+
+        #terminal {
+            padding: 25px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            flex-grow: 1;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2rem;
+            background-color: #66fcf1;
+            animation: parpadeo 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes parpadeo {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Pantalla interactiva inicial -->
+    <div id="pantalla-inicio">
+        <h2>> [ Toca en cualquier lugar para iniciar la experiencia ]_</h2>
+    </div>
+
+    <!-- Terminal con efecto de código escribiéndose -->
+    <div id="terminal"></div>
+
+    <!-- Reproductor de audio vinculado al Short de YouTube -->
+    <audio id="musica-fondo" loop>
+        <source src="https://www.youtube.com/watch?v=0cdjnEGEyOk" type="audio/mp4">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+
+    <script>
+        const pantallaInicio = document.getElementById('pantalla-inicio');
+        const musica = document.getElementById('musica-fondo');
+        const terminal = document.getElementById('terminal');
+
+        // Secuencia de código con temática de programación y la frase del video
+        const lineasCodigo = [
+            "> Inicializando kernel del sistema...",
+            "> Cargando módulos de desarrollo [██████████] 100%",
+            "> Sincronizando flujos de datos y audio...",
+            "> Estado: EN LÍNEA.",
+            "> ",
+            "> // If I love you, what's your promise?",
+            "> function compilarRealidad() {",
+            ">     const codigo = 'Limpio y estructurado';",
+            ">     const entorno = 'Terminal activa';",
+            ">     while(true) {",
+            ">         console.log('Escribiendo el futuro paso a paso...');",
+            ">     }",
+            "> }",
+            "> ",
+            "> compilarRealidad();"
+        ];
+
+        // Evento para arrancar audio y animación al tocar la pantalla
+        pantallaInicio.addEventListener('click', () => {
+            pantallaInicio.style.opacity = '0';
+            setTimeout(() => {
+                pantallaInicio.style.display = 'none';
+                musica.play().catch(error => console.log("Reproducción iniciada con interacción.", error));
+                escribirCodigo();
+            }, 600);
+        });
+
+        // Efecto visual de escritura automática
+        async function escribirCodigo() {
+            for (let i = 0; i < lineasCodigo.length; i++) {
+                await tipearLinea(lineasCodigo[i]);
+                terminal.innerHTML += "<br>";
+            }
+            terminal.innerHTML += '<span class="cursor"></span>';
+        }
+
+        function tipearLinea(texto) {
+            return new Promise(resolve => {
+                let i = 0;
+                let intervalo = setInterval(() => {
+                    terminal.innerHTML += texto.charAt(i);
+                    i++;
+                    if (i === texto.length) {
+                        clearInterval(intervalo);
+                        setTimeout(resolve, 250); // Pausa entre líneas
+                    }
+                }, 25); // Velocidad de tipeo
+            });
+        }
+    </script>
+</body>
+</html>
